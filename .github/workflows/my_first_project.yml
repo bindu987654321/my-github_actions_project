@@ -1,19 +1,49 @@
 name: My first project
 
 on:
-  push: 
-      branches: main
+  push:
+    branches:
+      - main
 
 jobs:
+  upstream_job:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Upstream Task
+        run: |
+          echo "This is the upstream job running first"
+          echo "Preparing data for downstream jobs..."
+
   my_first_job:
     runs-on: ubuntu-latest
+    needs: upstream_job  # This makes it wait for upstream_job to complete
     steps:
       - name: Save the Welcome Message
         run: |
           echo "Welcome to GitHub Actions!" > welcome.txt
-          
+      
       - name: Display Welcome Message
         run: |
-              cat welcome.txt
-            
+          cat welcome.txt
       
+      - name: Upload artifact for downstream
+        uses: actions/upload-artifact@v3
+        with:
+          name: welcome-file
+          path: welcome.txt
+
+  downstream_job:
+    runs-on: ubuntu-latest
+    needs: my_first_job  # This makes it wait for my_first_job to complete
+    steps:
+      - name: Download artifact from upstream
+        uses: actions/download-artifact@v3
+        with:
+          name: welcome-file
+      
+      - name: Process in Downstream
+        run: |
+          echo "This is the downstream job"
+          echo "Reading the welcome message:"
+          cat welcome.txt
+          echo "Downstream processing complete!"
