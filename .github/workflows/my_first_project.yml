@@ -27,7 +27,7 @@ jobs:
           cat welcome.txt
       
       - name: Upload artifact for downstream
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4.6.2
         with:
           name: welcome-file
           path: welcome.txt
@@ -37,7 +37,7 @@ jobs:
     needs: my_first_job  # This makes it wait for my_first_job to complete
     steps:
       - name: Download artifact from upstream
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v5
         with:
           name: welcome-file
       
