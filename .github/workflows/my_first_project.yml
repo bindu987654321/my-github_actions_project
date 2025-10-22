@@ -8,8 +8,12 @@ jobs:
   my_first_job:
     runs-on: ubuntu-latest
     steps:
+      - name: Save the Welcome Message
+        run: |
+          echo "Welcome to GitHub Actions!" > welcome.txt
+          
       - name: Display Welcome Message
         run: |
-          echo "Welcome to GitHub Actions!"
+              cat welcome.txt
             
       
